@@ -216,6 +216,49 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void testSearchAndCancle ()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find button Skip",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input2",
+                5
+        );
+
+        //      Поиск через @resource-id и  нужному тексту
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']"),
+                "Cannot find 'Object-oriented programming language' topick searching by 'Java'",
+                15
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find cancel search button",
+                5
+        );
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/search_empty_message"),
+                "Cannot find empty search message",
+                5
+        );
+
+    }
+
 //    private WebElement waitForElementPresent(String xpath, String error_message, long timeoutInSeconds)
 //    {
 //        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
