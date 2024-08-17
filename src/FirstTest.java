@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -259,6 +260,37 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void testSearchAndCompareResult ()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find button Skip",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input2",
+                5
+        );
+
+        assertElementsContainText(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title']"),
+                "Jva",
+                "Not all search results contain the word 'Java'",
+                15
+        );
+
+    }
+
 //    private WebElement waitForElementPresent(String xpath, String error_message, long timeoutInSeconds)
 //    {
 //        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -354,6 +386,21 @@ public class FirstTest {
         String actual_text = element.getText();
         Assert.assertEquals(error_message, expected_text, actual_text);
         return element;
+    }
+
+    private void assertElementsContainText(By by, String expected_text, String error_message, long timeoutInSeconds)
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+
+        List<WebElement> elements = wait.until(
+                ExpectedConditions.presenceOfAllElementsLocatedBy(by)
+        );
+
+        for (WebElement element : elements) {
+            String actual_text = element.getText();
+            Assert.assertTrue(error_message + ": " + actual_text, actual_text.contains(expected_text));
+        }
     }
 
 
