@@ -38,6 +38,7 @@ public class FirstTest {
     @After
     public void tearDowm()
     {
+        driver.rotate(ScreenOrientation.PORTRAIT);
         driver.quit();
     }
 
@@ -551,7 +552,6 @@ public class FirstTest {
     @Test
     public void testChangeScreenOrientationSearchResults ()
     {
-        driver.rotate(ScreenOrientation.PORTRAIT);
         //кликаем на скип
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Skip')]"),
