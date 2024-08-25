@@ -5,10 +5,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -900,6 +897,45 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void testArticleHasTitleDescription()
+    {
+        // Кликаем на скип
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find button Skip",
+                5
+        );
+
+        // Кликаем в поисковую строку
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find search input",
+                5
+        );
+
+        // Пишем в поисковой строке 'Java'
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input2",
+                5
+        );
+
+        // Заходим в нужную статью
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']"),
+                "Cannot find element 'Object-oriented programming language'",
+                15
+        );
+
+        // Проверяем наличие элемента pcs-edit-section-title-description, так как у Заголовка нет ID
+       assertElementPresent(
+                By.xpath("@resource-id='pcs-edit-section-title-description'"),
+                "Title description element is not present"
+        );
+    }
+
 
 
 
@@ -1087,6 +1123,15 @@ public class FirstTest {
     {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    private void assertElementPresent(By by, String error_message) {
+        try {
+            WebElement element = driver.findElement(by);
+            Assert.assertNotNull(error_message, element);
+        } catch (NoSuchElementException e) {
+            Assert.fail(error_message);
+        }
     }
 
 }
