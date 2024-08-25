@@ -411,11 +411,11 @@ public class FirstTest {
         );
 
         //Выходим на страницу поиска
-        waitForElementAndClick(
-                By.xpath("//android.widget.ImageButton[@content-desc=\"Navigate up\"]"),
-                "Cannot find button Navigate up",
-                5
-        );
+                waitForElementAndClick(
+                        By.xpath("//android.widget.ImageButton[@content-desc=\"Navigate up\"]"),
+                        "Cannot find button Navigate up",
+                        5
+                );
 
         //Выходим на главную страницу
         waitForElementAndClick(
@@ -689,7 +689,7 @@ public class FirstTest {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
                 "Cannot find search input",
-                5
+                10
         );
 
         String search_line = "Java";
@@ -715,8 +715,192 @@ public class FirstTest {
                 "Cannot find article 'Automation for Apps' topic searching by " + search_line + " after running from background",
                 15
         );
+    }
+
+    @Test
+    public void testSaveTwoArticlesInList ()
+    {
+        //кликаем на скип
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Skip')]"),
+                "Cannot find button Skip",
+                5
+        );
+
+        //кликаем в поисковую строку
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find search input",
+                5
+        );
+
+        //Пишем в поисковой строке Java
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "Cannot find search input2",
+                5
+        );
+
+        //Заходим в нужную статью
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Object-oriented programming language']"),
+                "Cannot find element 'Automation for Apps'",
+                5
+        );
+
+        //Кликаем на Save
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find element 'Save'",
+                10
+        );
+
+        //Кликаем на Add to List
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Cannot find element 'Add to List'",
+                5
+        );
+        //название созданного списка
+        String name_of_list = "Test_list";
+
+        //Задаем данные в Name of this list
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                name_of_list,
+                "Cannot find Name of this list",
+                5
+        );
+
+        //кликаем на Ok
+        waitForElementAndClick(
+                By.id("android:id/button1"),
+                "Cannot find button Ok",
+                5
+        );
+
+        //Выходим на страницу поиска
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc=\"Navigate up\"]"),
+                "Cannot find button Navigate up",
+                5
+        );
+
+        //Пишем в поисковой строке Appium
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Appium",
+                "Cannot find search input2",
+                5
+        );
+
+        //Заходим в нужную статью
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='Automation for Apps']"),
+                "Cannot find element 'Automation for Apps'",
+                5
+        );
+
+        //Кликаем на Save
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find element 'Save'",
+                5
+        );
+
+        //Кликаем на Add to List
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Cannot find element 'Add to List'",
+                5
+        );
+
+        //Выбираем нужный нам список
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/item_title"),
+                "Cannot find list " + name_of_list,
+                5
+        );
+
+        //Выходим на страницу поиска
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc=\"Navigate up\"]"),
+                "Cannot find button Navigate up",
+                5
+        );
+
+        //Выходим на главную страницу
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc=\"Navigate up\"]"),
+                "Cannot find button Navigate up in Search",
+                5
+        );
+
+        //Выходим в сохраненные объекты
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc=\"Saved\"]/android.widget.FrameLayout/android.widget.ImageView"),
+                "Cannot find Saved objects",
+                5
+        );
+
+        //Прокрутим до нужного списка
+        swipeUpToFindElement(
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_title' and @text='" + name_of_list + "']"),
+                "Cannot find Test_list",
+                20
+        );
+
+        //Заходим в нужный список статей
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_title' and @text='" + name_of_list + "']"),
+                "Cannot find Test_list",
+                5
+        );
+
+        // Выводим все элементы с ID 'org.wikipedia:id/page_list_item_title' и их текст
+        List<WebElement> elements = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
+        for (WebElement element : elements) {
+            System.out.println("Found element with text: " + element.getText());
+        }
+
+        //Свайпаем элемент налево для удаления
+        swipeElementToLeft(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find saved article"
+        );
+
+        waitForElementNotPresent(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot delete saved article",
+                5
+        );
+
+        //Убеждаемся что есть нужная статья
+        assertElementHasText(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Appium",
+                "Cannot find right article Appium",
+                15
+        );
+
+        //Заходим в статью
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title' and @text='Appium']"),
+                "Cannot find Test_list",
+                5
+        );
+
+        //Проверяем что нужный подзаголовок на месте
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='pcs-edit-section-title-description' and @text='Automation for Apps']"),
+                "Cannot find article 'Automation for Apps'",
+                15
+        );
 
     }
+
+
 
 
 
