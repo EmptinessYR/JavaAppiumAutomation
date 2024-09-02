@@ -80,4 +80,16 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject.assertNotAllElementsContainsSearchParam(search_param);
     }
 
+    @Test
+    public void testSearchAndCompareTitleDescription ()
+    {
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        String article_title = "Java (programming language)";
+        String article_description = "Object-oriented programming language";
+        String search_param = "Java";
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine(search_param);
+        SearchPageObject.waitForElementByTitleAndDescription(article_title,article_description);
+    }
+
 }

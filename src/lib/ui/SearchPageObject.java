@@ -18,6 +18,7 @@ public class SearchPageObject extends MainPageObject {
         SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*/*[@resource-id='org.wikipedia:id/page_list_item_title']",
         SEARCH_EMPTY_RESULT_LABEL = "org.wikipedia:id/results_text",
         SEARCH_RESULT_LIST = "//*[@resource-id='org.wikipedia:id/page_list_item_title']",
+        TITLE_AND_DESCRIPTION_TOGETHER_TPL = "//*[@resource-id = 'org.wikipedia:id/page_list_item_title' and @text='{TITLE}']/following-sibling::*[name()='android.widget.TextView' and @resource-id='org.wikipedia:id/page_list_item_description' and @text='{DESCRIPTION}']",
         SEARCH_EMPTY_RESULT = "org.wikipedia:id/search_empty_message";
 
     public SearchPageObject(AppiumDriver driver)
@@ -29,6 +30,11 @@ public class SearchPageObject extends MainPageObject {
     private static String getResultSearchElement (String substring)
     {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}",substring);
+    }
+
+    private static String getResultTitleAndDescriptionTogether (String title, String description)
+    {
+        return TITLE_AND_DESCRIPTION_TOGETHER_TPL.replace("{TITLE}", title).replace("{DESCRIPTION}", description);
     }
 
     /*TEMPLATES METHODS*/
@@ -116,5 +122,14 @@ public class SearchPageObject extends MainPageObject {
             "Not all search results contain the word 'Java'",
             15
         );
+    }
+
+    public void waitForElementByTitleAndDescription(String title, String description)
+    {
+        String title_and_description_xpath = getResultTitleAndDescriptionTogether(title,description);
+        this.waitForElementPresent(
+                By.xpath(title_and_description_xpath),
+                "Cannot find object with title ='" + title + "' and description ='" + description + "'",
+                15);
     }
 }
